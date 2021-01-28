@@ -15,6 +15,7 @@ library(dashCoreComponents)
 library(dashBootstrapComponents)
 library(tidyverse)
 library(ggplot2)
+library(cowplot)
 
 
 #source(tab1)
@@ -124,48 +125,55 @@ return(ggplotly(plot, tooltip = 'Value'))
 #     return fig
 # ##### END IN PROGRESS
 
-@app.callback(
-    Output('crime_trends_plot', 'srcDoc'),
-    Input('geo_multi_select', 'value'),
-    Input('geo_radio_button', 'value'))
-def plot_alt1(geo_values, geo_level):
-    
+app$callback(
+    list(output('crime_trends_plot', 'children')),
+    list(input('geo_multi_select', 'value'),
+    input('geo_radio_button', 'value')),
+    function(geo_values, geo_level) {
+
     # First time loading show message instead of displaying plot
-    if geo_values == "":
-    return '<h1>Please select a location from the menu on the left to generate plots</div>'
+    if(geo_values == ""){
+        return('<h1>Please select a location from the menu on the left to generate plots</div>')
+    }
 
+geo_list <- list(geo_values)
+metric <- "Violations per 100k"
+metric_name <- "Violations per 100k"
 
-geo_list = list(geo_values)
-metric = "Violations per 100k"
-metric_name = "Violations per 100k"
+df <- DATA %>%
+    filter(Metric == 'Rate per 100,000 population') #%>%
+    #filter(Geo_Level == geo_list) %>%  NEED HELP FROM SASHA NEXT 3 LINES
+    #filter(Geography %in% geo_list)
+    #df = df[df["Geography"].isin(geo_list)]
 
-df = DATA[
-    (DATA['Metric'] == 'Rate per 100,000 population') &
-        (DATA["Geo_Level"] == geo_level)
-]
-df = df[df["Geography"].isin(geo_list)]
+cat_list1 = list('Violent Crimes', 'Property Crimes', 
+                 'Drug Crimes', 'Other Criminal Code Violations')
+cat_list2 = list('Total violent Criminal Code violations [100]', 
+                 'Total property crime violations [200]',
+                 'Total drug violations [401]',
+                 'Total other Criminal Code violations [300]')
 
-category_dict = {
-    'Violent Crimes' : 'Total violent Criminal Code violations [100]',
-    'Property Crimes' : 'Total property crime violations [200]',
-    'Drug Crimes' : 'Total drug violations [401]',
-    'Other Criminal Code Violations' : 'Total other Criminal Code violations [300]'
+plot_list <- list()
+
+for (i in 1:4) {
+    p1 <- DATA %>%
+    filter(`Violation Description` == cat_list2[[i]]) %>%
+    ggplot(aes(x = Year, y = Value, color = Geography)) +
+        geom_line() +
+        ggtitle('Violent Crimes') +
+        ylab(cat_list1[[i]])
+    plot_list[[i]] <- p1
 }
 
-plot_list = []
+top_row <- plot_grid(plot_list[1], plot_list[2])
+bot_row <- plot_grid(plot_list[3], plot_list[4])
 
-for title, description in category_dict.items():
-    plot_list.append(
-        alt.Chart(df[df["Violation Description"] == description], title = title).mark_line().encode(
-            x = alt.X('Year'),
-            y = alt.Y('Value', title = metric_name),
-            color = "Geography").properties(height = 150, width = 300)
-    )
+chart = plot_grid(top_row, bot_row, ncol=1)
 
-chart = (plot_list[0] | plot_list[2]) & (plot_list[1] | plot_list[3])
+return(chart) 
+})
 
-return chart.to_html()
-
+### stopped here
 def get_dropdown_values(col):
     """Create CMA barplot
     
