@@ -9,20 +9,26 @@ setwd("~/mds/532/532_Group_22-R")
 
 # RDS File Source: https://github.com/sbabicki/heatmapper/blob/master/geomap/data/CAN_1.rds
 provinces <- readRDS("data/processed/canadian_provinces.rds")
-
 df <- read.delim("data/processed/DSCI532-CDN-CRIME-DATA.tsv")
+
+metric <- "Rate per 100,000 population"
+violation <- "Total, all violations" # or "Total, all violations [0]" 
+year <- 2002
+
 df <- df %>% 
   drop_na(Value) %>%
   mutate(Geography = str_replace(Geography, " \\[[\\d]*\\]", "")) %>%
+  mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) %>%
   filter(Geo_Level == "PROVINCE") %>% 
-  filter(Metric == "Rate per 100,000 population") %>%
-  filter(Violation.Description == "Total, all violations [0]") %>%
-  filter(Year == 2002)
+  filter(Metric == metric) %>%
+  filter(Violation.Description == violation) %>%
+  filter(Year == year)
+
 
 province_data <- left_join(provinces, df, by=c("NAME"="Geography"))
 
 num_colours <- 13
-bins <- seq(from=0, to=max(df$Value), length.out = num_colours)
+bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
 
 # A few pallette options
 #pallete <- "inferno"
@@ -57,4 +63,9 @@ province_data %>%
     labelOptions = labelOptions(
       style = list("font-weight" = "normal", padding = "3px 8px"),
       textsize = "15px",
-      direction = "auto"))
+      direction = "auto")) %>%
+  addLegend(pal = pal, 
+            values = ~Value, 
+            opacity = 0.7, 
+            title = violation,
+            position = "bottomright")
