@@ -173,51 +173,56 @@ chart = plot_grid(top_row, bot_row, ncol=1)
 return(chart) 
 })
 
-### stopped here
-def get_dropdown_values(col):
-    """Create CMA barplot
-    
-    Parameters
-    -------
-    String
-        The column to get dropdown options / value for
-    
-    Returns
-    -------
-    [[String], String]
-        List with two elements, options list and default value based on data
-    """
-df = DATA[col].unique()
-return [[{"label": x, "value": x} for x in df], df[0]]
+get_dropdown_values <- function(col) {
+#    """Create CMA barplot
+#    
+#    Parameters
+#    -------
+#    String
+#        The column to get dropdown options / value for
+#    
+#    Returns
+#    -------
+#    [[String], String]
+#        List with two elements, options list and default value based on data
+#    """    
 
-@app.callback(
-    Output('metric_select', 'options'),
-    Output('metric_select', 'value'),
-    Output('violation_select', 'options'),
-    Output('violation_select', 'value'),
-    Input('crime-dashboard-tabs', 'value'))
-def set_dropdown_values(__):
-    """Set dropdown options for metrics, returns options list and default value for each output"""
-dropdowns = ["Metric", "Violation Description"]
-output = []
-for i in dropdowns:
-    output += get_dropdown_values(i)
-return output
+    df = DATA %>%
+        select(!!sym(col)) %>% unique()
+        # GET SASHA TO REPLICATE (map function?)
+}
 
-@app.callback(
-    Output('geo_multi_select', 'options'),
-    Input('crime-dashboard-tabs', 'value'),    
-    Input('geo_radio_button', 'value'))
-def set_dropdown_values(__, geo_level):
-    """Set dropdown options for metrics, returns options list  for each output"""
+#def get_dropdown_values(col):
+#
+#df = DATA[col].unique()
+#return [[{"label": x, "value": x} for x in df], df[0]]
 
-df = DATA[DATA["Geo_Level"] == geo_level]
-df = df["Geography"].unique()
-return [{'label': city, 'value': city} for city in df]
+app$callback(
+    list(output('metric_select', 'options'),
+    output('metric_select', 'value'),
+    output('violation_select', 'options'),
+    output('violation_select', 'value')),
+    list(input('crime-dashboard-tabs', 'value'))),
+set_dropdown_values <- function(__){  # ASK SASHA WHY "__"
+#"""Set dropdown options for metrics, returns options list and default value for each output"""
 
-if __name__ == '__main__':
-    
-    # Disable max rows for data sent to altair plots
-    alt.data_transformers.disable_max_rows()
+    dropdowns <- c("Metric", "Violation Description")
+    output = list()
+    for (i in dropdowns) {
+        output.append(get_dropdown_values(i)) }
+        return(output)
+    }
 
-app.run_server(debug=True)
+app$callback(
+    list(output('geo_multi_select', 'options')),
+    list(input('crime-dashboard-tabs', 'value'),    
+    input('geo_radio_button', 'value'))),
+set_dropdown_values <- function(__, geo_level){
+    df <- DATA %>%
+        filter(Geo_Level == !!sym(geo_level)) %>%
+        select(Geography) %>% unique()
+    # GET SASHA TO DO MAPPING FUNCTION... PYTHON CODE WAS:
+    #return [{'label': city, 'value': city} for city in df]
+}
+
+app$run_server(debug=T)
