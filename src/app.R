@@ -188,9 +188,9 @@ get_dropdown_values <- function(col) {
 #    """    
 
     df = DATA %>%
-        select(!!sym(col)) %>% unique()
-        # GET SASHA TO REPLICATE (map function?)
-}
+        select(!!sym(col)) %>% unique() %>%  # dbl check if !!sym() needed here
+    return(df %>% purrr::map(function(val) list(label = val, value = val)))}
+        # SASHA - CHECK WHETHER ABOVE R METHOD CORRESPONDS TO HERS BELOW
 
 #def get_dropdown_values(col):
 #
@@ -216,13 +216,14 @@ set_dropdown_values <- function(__){  # ASK SASHA WHY "__"
 app$callback(
     list(output('geo_multi_select', 'options')),
     list(input('crime-dashboard-tabs', 'value'),    
-    input('geo_radio_button', 'value'))),
+    input('geo_radio_button', 'value')),
 set_dropdown_values <- function(__, geo_level){
     df <- DATA %>%
         filter(Geo_Level == !!sym(geo_level)) %>%
         select(Geography) %>% unique()
-    # GET SASHA TO DO MAPPING FUNCTION... PYTHON CODE WAS:
+    return(df %>% purrr:map(function(city) list(label = city, value = city)))
+    #SASHA - CHECK WHETHER ABOVE FUNCTION CORRESPONDS TO PYTHON LIST COMPREHENSION
     #return [{'label': city, 'value': city} for city in df]
-}
+})
 
 app$run_server(debug=T)
