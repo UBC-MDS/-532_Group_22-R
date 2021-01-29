@@ -36,7 +36,7 @@ return( dbcContainer(
                                             optionHeight=dropdown_height,
                                         ),
                                     ),
-                                    style=list("width" = "100%"), #JOEL USES MAX-WIDTH
+                                    #style=list("width" = "100%"), #JOEL USES MAX-WIDTH
                                 ),
                             )
                         ),
@@ -50,7 +50,7 @@ return( dbcContainer(
                                             optionHeight=dropdown_height,
                                         ),
                                     ),
-                                    style=list("width"= "100%"),
+                                    #style=list("width"= "100%"),
                                 ),
                             )
                         ),
@@ -70,11 +70,11 @@ return( dbcContainer(
                                             optionHeight=dropdown_height,
                                         ),
                                     ),
-                                    style=list("width" = "100%"),
+                                    #style=list("width" = "100%"),
                                 ),
                             )
                     ,
-                    style=list('padding-left'= '2%')
+                    #style=list('padding-left'= '2%')
                 ),
                 
                 # Column 2
@@ -85,14 +85,14 @@ return( dbcContainer(
                             htmlDiv(
                                 list(
                                     #dcc.Graph(id="choropleth"),
-                                    html.Img( src="https://i.pinimg.com/originals/27/8e/ef/278eefb576915d43e85b7a467d8f709a.jpg",
-                                              width="100%",
+                                    #htmlImg( src="https://i.pinimg.com/originals/27/8e/ef/278eefb576915d43e85b7a467d8f709a.jpg",
+                                    #          width="100%",
                                     )
                                 )
                             ),
                         )
                     ),
-                    style=list('padding-left' = '2%')
+                    #style=list('padding-left' = '2%')
                 ),
             ),
                 # Column 3
@@ -101,6 +101,7 @@ return( dbcContainer(
                     dbcRow(
                         list(
                             htmlDiv("Violation Subcategory by CMA"),
+                            dccGraph(id='cma_barplot')
                             # SASHA - NEED TO REPLACE WITH dccGraph
                             #html.Iframe(
                             #    id='cma_barplot',
@@ -109,11 +110,11 @@ return( dbcContainer(
                     )
                     ),
                     #width="auto", DOES THIS GET USED FOR R?
-                    style=list('padding-left' = '2%', 'padding-right' = '2%')
+                    #style=list('padding-left' = '2%', 'padding-right' = '2%')
                 ),
             )
         )
-    ), 
+    ) 
     #fluid=True SAHSA - IS THIS NEEDED FOR R?
-)
+
 }

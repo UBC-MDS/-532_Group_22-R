@@ -5,8 +5,8 @@
 #Usage: python src/app.py
 #Source for code to create tabs: https://dash.plotly.com/dash-core-components/tabs
 
-install.packages('dash')
-install_github('facultyai/dash-bootstrap-components@r-release')
+#install.packages('dash')
+#devtools::install_github('facultyai/dash-bootstrap-components@r-release')
 
 library(dash)
 library(dashHtmlComponents)
@@ -18,36 +18,38 @@ library(ggplot2)
 library(cowplot)
 
 
-#source(tab1)
-#source(tab2)
+source("src/tab1.R")
+#source("src/tab2.R")
 
-app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP)
+app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP, suppress_callback_exceptions=TRUE)
+#app$config('suppress_callback_exceptions' = TRUE)
 
-#app.title = 'Canadian Crime Dashboard' WHERE DOES THIS GET USED? PYTHON
-app$run_server(debug = T)
+#app$title = 'Canadian Crime Dashboard' #verify 
 
-app$layout = htmlDiv(
+app$layout(htmlDiv(
     dccTabs(id='crime-dashboard-tabs', value='tab-1', children= list(
-        dccTab(label='Geographic Crime Comparisons', value='tab-1'),
-        dccTab(label='Crime Trends', value='tab-2')
+        dccTab(label='Geographic Crime Comparisons', value='tab-1')
+        #dccTab(label='Crime Trends', value='tab-2')
         )
         ),
     htmlDiv(id='crime-dashboard-content')
-)
+))
 
 app$callback(
     output('crime-dashboard-content', 'children'),
     params = list(input('crime-dashboard-tabs', 'value')),
     render_content <- function(tab){ 
     
-    data = import_data()
-    if(tab == 'tab-1') {
-        return(htmlDiv(tab1$generate_layout())) }
-    else if (tab == 'tab-2') {
-        return(htmlDiv(tab2$generate_layout()))
+    data = import_data() 
+    return(htmlDiv(tab1$generate_layout()))
+    
+    #if(tab == 'tab-1') {
+    #    return(htmlDiv(tab1$generate_layout())) }
+    #else if (tab == 'tab-2') {
+    #    return(htmlDiv(tab2$generate_layout()))
+    #}
     }
-    }
-        )
+       )
 
 # Pull initial data for plots
 import_data <- function() {
@@ -63,7 +65,6 @@ data <- read_tsv(path)
 
 ### Data Wrangling 
 data <- data %>% drop_na() 
-# data$Year <- as.Date()
 return(data)
 }
 
@@ -97,7 +98,7 @@ plot <- df %>%
     
 return(ggplotly(plot, tooltip = 'Value'))
 
-}
+})
 
 
 # ##### IN PROGRESS
@@ -202,8 +203,8 @@ app$callback(
     output('metric_select', 'value'),
     output('violation_select', 'options'),
     output('violation_select', 'value')),
-    list(input('crime-dashboard-tabs', 'value'))),
-set_dropdown_values <- function(__){  # ASK SASHA WHY "__"
+    list(input('crime-dashboard-tabs', 'value')),
+set_dropdown_values <- function(z){ 
 #"""Set dropdown options for metrics, returns options list and default value for each output"""
 
     dropdowns <- c("Metric", "Violation Description")
@@ -211,19 +212,18 @@ set_dropdown_values <- function(__){  # ASK SASHA WHY "__"
     for (i in dropdowns) {
         output.append(get_dropdown_values(i)) }
         return(output)
-    }
+    })
 
 app$callback(
     list(output('geo_multi_select', 'options')),
     list(input('crime-dashboard-tabs', 'value'),    
     input('geo_radio_button', 'value')),
-set_dropdown_values <- function(__, geo_level){
+set_multi_dropdown_values <- function(z, geo_level){
     df <- DATA %>%
         filter(Geo_Level == !!sym(geo_level)) %>%
         select(Geography) %>% unique()
     return(df %>% purrr:map(function(city) list(label = city, value = city)))
-    #SASHA - CHECK WHETHER ABOVE FUNCTION CORRESPONDS TO PYTHON LIST COMPREHENSION
-    #return [{'label': city, 'value': city} for city in df]
+
 })
 
-app$run_server(debug=T)
+app$run_server(debug=T, suppress_callback_exceptions = TRUE)
