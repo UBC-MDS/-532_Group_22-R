@@ -25,10 +25,12 @@ import_data <- function() {
     mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) 
 }
 
+# Import geo data for choropleth
 import_map_data <- function(){
   readRDS("data/processed/canadian_provinces.rds")
 }
 
+# Global vars
 PROVINCES <- import_map_data()
 DATA <- import_data()
 
@@ -37,6 +39,7 @@ app <- Dash$new(suppress_callback_exceptions = TRUE,
 
 app$title("Canadian Crime Dashboard")
 
+# Page Structure
 app$layout(
   htmlDiv(list(
     dbcTabs(
@@ -50,6 +53,7 @@ app$layout(
     ))
 )
 
+# Tab Selection
 app$callback(
   output('crime-dashboard-content', 'children'),
   params = list(input('crime-dashboard-tabs', 'active_tab')),
@@ -63,7 +67,7 @@ app$callback(
   }
 )
 
-# Choropleth map, tab1
+# Tab 1 Choropleth map
 app$callback(
   output = output(id='choropleth', property='figure'),
   list(
@@ -100,7 +104,7 @@ app$callback(
   }
 )
 
-# CMA plot, tab1
+# Tab 1 CMA plot
 app$callback(
   output('cma_barplot', 'figure'),
   list(
@@ -126,10 +130,12 @@ app$callback(
    }
 )
 
+# Helper function
 get_dropdown_options <- function(col){
   unique(col) %>% map(function(val) list(label = val, value = val))
 }
 
+# Tab 1 Metric Dropdown
 app$callback(
   output('metric_select', 'options'),
   list(input('crime-dashboard-tabs', 'value')),
@@ -138,6 +144,7 @@ app$callback(
   }
 )
 
+# Tab 1 Violation Dropdown
 app$callback(
   output('violation_select', 'options'),
   list(input('crime-dashboard-tabs', 'value')),
@@ -145,6 +152,8 @@ app$callback(
     get_dropdown_options(DATA$Violation.Description)
   }
 )
+
+# Tab 2 Multi Location Dropdown
 app$callback(
     output('geo_multi_select', 'options'),
     list(input('geo_radio_button', 'value'),
