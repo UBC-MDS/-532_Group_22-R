@@ -185,7 +185,7 @@ app$callback(
 )
 
 app$callback(
-    output('crime_trends_plot', 'fig'),
+    output('crime_trends_plot', 'figure'),
     list(
         input('geo_multi_select', 'value'),
         input('geo_radio_button', 'value')
@@ -212,7 +212,6 @@ app$callback(
         plot <- df %>%
                 ggplot(aes(x = Year, y = Value, color = Geography)) +
                 geom_line() +
-                ggtitle('Violent Crimes') +
                 ylab(cat_labs) +
                 facet_wrap(~Violation.Description, ncol=2)
         
