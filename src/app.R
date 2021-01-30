@@ -221,5 +221,5 @@ app$callback(
     }
 )
 
-#app$run_server(debug=FALSE) (CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
-app$run_server(host = '0.0.0.0', debug=FALSE)
+app$run_server(debug=FALSE) #(CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
+#app$run_server(host = '0.0.0.0', debug=FALSE)
