@@ -10,14 +10,11 @@ library(devtools)
 library(dashCoreComponents)
 library(dashBootstrapComponents)
 
+#' Generate tab 1 layout
+#'
+#' @return dbcContainer Container with the html content of the page
 generate_tab_1_layout <- function(){
-    #   """Generate tab 1 layout
     
-    #   Returns
-    #   -------
-    #   dbc.Container
-    #       Container with the html content of the page
-    #   """    
     dropdown_height <- 70   
     start_year <- 1998
     end_year <- 2019
@@ -25,6 +22,8 @@ generate_tab_1_layout <- function(){
     
     dbcContainer(list(
         dbcRow(list(
+            
+            # Column 1
             dbcCol(list(
                 dbcRow(list(
                     htmlDiv(list(
@@ -75,7 +74,7 @@ generate_tab_1_layout <- function(){
                     dccGraph(id="choropleth", style = list('width'= '100%', 'height'= '600px'))
                     ))
                 ),
-                width=5, 
+                width=4, 
                 style=list('padding-left' = '2%')
             ),
             
@@ -86,7 +85,7 @@ generate_tab_1_layout <- function(){
                     dccGraph(id='cma_barplot', style = list('width'= '100%', 'height'= '600px'))
                 ))
             ),
-            width=4, 
+            width=5, 
             style=list('padding-left' = '2%', 'padding-right' = '2%')
             )
             ))

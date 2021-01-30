@@ -68,11 +68,37 @@ app$callback(
 # Choropleth map, tab1
 app$callback(
   output = output(id='choropleth', property='figure'),
-  params = list(input(id='metric_select', property='value')),
-  function(x){
-    ggplotly(
-      ggplot(gapminder, aes(x = year)) + geom_histogram(bins=10)
-    )
+  list(
+    input('metric_select', 'value'), 
+    input('violation_select', 'value'),
+    input('year_select', 'value')
+  ),
+  function(metric, violation, year){
+    
+    df <- DATA %>% 
+      filter(Geo_Level == "PROVINCE") %>% 
+      filter(Metric == metric) %>%
+      filter(Violation.Description == violation) %>%
+      filter(Year == year)
+    
+    province_data <- left_join(PROVINCES, df, by=c("NAME"="Geography"))
+    
+    num_colours <- 13
+    bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
+    
+    # A few pallette options
+    #pallete <- "inferno"
+    pallete <- "RdYlBu"
+    #pallete <- topo.colors(num_colours)
+    #pallete <- colorRampPalette(c("#FF0000", "#000000", "#33FF00"))(num_colours)
+    
+    pal <- colorBin(pallete, domain = province_data$Value, bins = bins, reverse = TRUE)
+    
+    fig <- plot_ly()
+    fig <- fig %>% 
+      add_trace(type="choropleth")
+    
+    fig
   }
 )
 
