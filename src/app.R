@@ -9,6 +9,7 @@ library(plotly)
 library(stringr)
 library(spdplyr)
 library(dplyr)
+library(rjson)
 
 source("src/tab1.R")
 source("src/tab2.R")
@@ -27,7 +28,14 @@ import_data <- function() {
 
 # Import geo data for choropleth
 import_map_data <- function(){
-  readRDS("data/processed/canadian_provinces.rds")
+  # readRDS("data/processed/canadian_provinces.rds")
+  province_geom <- fromJSON(file = 'data/raw/geojson/provinces_simple.geojson')
+  
+  # Add ID field to each feature in the JSON
+  for (val in seq_along(province_geom$features)) {
+    province_geom$features[[val]]$id <- province_geom$features[[val]]$properties$PRENAME
+  }
+  province_geom
 }
 
 # Global vars
@@ -79,28 +87,39 @@ app$callback(
     
     df <- DATA %>% 
       filter(Geo_Level == "PROVINCE") %>% 
-      filter(Metric == metric) %>%
-      filter(Violation.Description == violation) %>%
-      filter(Year == year)
+      # filter(Metric == metric) %>%
+      # filter(Violation.Description == violation) %>%
+      # filter(Year == year) %>% 
+      filter(Year == 2010) %>%
+      filter(Violation.Description == 'Total, all violations') %>%
+      filter(Metric == 'Rate per 100,000 population')
     
-    province_data <- left_join(PROVINCES, df, by=c("NAME"="Geography"))
+    # province_data <- left_join(PROVINCES, df, by=c("NAME"="Geography"))
     
-    num_colours <- 13
-    bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
+    # num_colours <- 13
+    # bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
     
     # A few pallette options
     #pallete <- "inferno"
-    pallete <- "RdYlBu"
+    # pallete <- "RdYlBu"
     #pallete <- topo.colors(num_colours)
     #pallete <- colorRampPalette(c("#FF0000", "#000000", "#33FF00"))(num_colours)
     
-    pal <- colorBin(pallete, domain = province_data$Value, bins = bins, reverse = TRUE)
+    # pal <- colorBin(pallete, domain = province_data$Value, bins = bins, reverse = TRUE)
     
     fig <- plot_ly()
-    fig <- fig %>% 
-      add_trace(type="choropleth")
-    
+    fig <- fig %>% add_trace(
+      type = "choropleth",
+      geojson = PROVINCES,
+      locations = df$Geography,
+      z = df$Value,
+      colorscale = "Viridis",
+      zmin = min(df$Value),
+      zmax = max(df$Value),
+      marker = list(line = list(width = 0))
+    )
     fig
+    
   }
 )
 
@@ -201,4 +220,4 @@ app$callback(
     }
 )
 
-app$run_server(debug=FALSE)
+app$run_server(host = '0.0.0.0', debug=FALSE)
