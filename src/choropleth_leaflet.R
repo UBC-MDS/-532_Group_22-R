@@ -32,9 +32,9 @@ bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
 
 # A few pallette options
 #pallete <- "inferno"
-#pallete <- "RdYlBu"
+pallete <- "RdYlBu"
 #pallete <- topo.colors(num_colours)
-pallete <- colorRampPalette(c("#FF0000", "#000000", "#33FF00"))(num_colours)
+#pallete <- colorRampPalette(c("#FF0000", "#000000", "#33FF00"))(num_colours)
 
 pal <- colorBin(pallete, domain = province_data$Value, bins = bins, reverse = TRUE)
 
