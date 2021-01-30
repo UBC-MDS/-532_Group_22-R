@@ -195,25 +195,26 @@ app$callback(
         metric <- "Rate per 100,000 population"
         metric_name <- "Violations per 100k"
         
-        cat_list <- list('Total violent Criminal Code violations', 
-                         'Total property crime violations',
-                         'Total drug violations',
-                         'Total other Criminal Code violations')
-        
-        cat_labs <- list('Violent Crimes', 'Property Crimes', 
-                     'Drug Crimes', 'Other Criminal Code Violations')
+        categories <- c(
+          'Violent Crimes' = 'Total violent Criminal Code violations', 
+          'Property Crimes' = 'Total property crime violations',
+          'Drug Crimes' =  'Total drug violations',
+          'Other Criminal Code Violations' = 'Total other Criminal Code violations')
         
         df <- DATA %>%
             filter(Metric == metric) %>%
             filter(Geo_Level == geo_level) %>%  
             filter(Geography %in% geo_list) %>%
-            filter(Violation.Description %in% cat_list)
+            filter(Violation.Description %in% categories)
         
         plot <- df %>%
-                ggplot(aes(x = Year, y = Value, color = Geography)) +
-                geom_line() +
-                ylab(cat_labs) +
-                facet_wrap(~Violation.Description, ncol=2)
+          ggplot(aes(x = Year, y = Value, color = Geography)) +
+          geom_line() +
+          labs(y = metric) +
+          facet_wrap(~Violation.Description, 
+                     ncol=2, 
+                     scales = "free"
+                     )
         
         ggplotly(plot)
     }
