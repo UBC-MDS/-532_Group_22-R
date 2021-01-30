@@ -53,7 +53,7 @@ generate_tab_1_layout <- function(){
             dbcCol(list(
                 dbcRow(list(
                     htmlDiv("Violation Subcategory by Province"),
-                    dccGraph(id="choropleth")
+                    dccGraph(id="choropleth", style = list('width'= '100%', 'height'= '600px'))
                     ))
                 ),
                 width=5, 

@@ -78,7 +78,7 @@ app$callback(
 
 # CMA plot, tab1
 app$callback(
-  output('cma_barplot', 'children'),
+  output('cma_barplot', 'figure'),
   list(
     input('metric_select', 'value'), 
     input('violation_select', 'value')
@@ -86,18 +86,19 @@ app$callback(
   function(metric, violation) {
 
     df <- DATA %>%
-      filter(Metric == !!sym(metric)) %>%
-      filter(Violation.Description == !!sym(violation)) %>%
+      filter(Metric == metric) %>%
+      filter(Violation.Description == violation) %>%
       filter(Geo_Level == "CMA")
     
     plot <- df %>%
       ggplot(aes(x = Value, y = Geography, tooltip = Value)) +
-      geom_bar(width = 0.5) + # size may need changing
-      labs(x = !!sym(metric), y = 'Census Metropolitan Area (CMA)') +
-      ggtitle(!!sym(violation))
+      geom_bar(width = 0.5, stat = "identity") + # size may need changing
+      labs(x = metric, y = 'Census Metropolitan Area (CMA)') +
+      ggtitle(violation)
     
-   ggplotly(plot, tooltip = 'Value')
-})
+    ggplotly(p = plot)
+   }
+)
 
 get_dropdown_options <- function(col){
   unique(col) %>% map(function(val) list(label = val, value = val))
