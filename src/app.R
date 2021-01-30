@@ -11,6 +11,7 @@ library(spdplyr)
 library(dplyr)
 
 source("src/tab1.R")
+source("src/tab2.R")
 
 # Pull initial data for plots
 import_data <- function() {
@@ -57,7 +58,7 @@ app$callback(
         return(htmlDiv(generate_tab_1_layout())) 
     }
     else if (tab == 'tab-2') {
-      #return(htmlDiv(generate_tab_1_layout()))
+        return(htmlDiv(generate_tab_2_layout()))
     }
   }
 )

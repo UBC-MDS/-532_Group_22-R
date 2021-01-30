@@ -1,7 +1,7 @@
 # author: Ifeanyi Anene and Cal Schafer 
 # date: 2021-01-22
 #"""
-#Module to generate tab 1: Geographic Crime Comparisons
+#Module to generate tab 2: Geographic Crime Comparisons
 #"""
 
 library(dash)
@@ -14,26 +14,15 @@ library(ggplot2)
 library(cowplot)
 
 
-generate_layout <- function(){
-#    """Generate tab 2 layout
-#
-#    Returns
-#    -------
-#    dbc.Container
-#        Container with the html content of the page
-#    """    
-    
-return(dbcContainer(
-    list(
-    
-    ### 1st Row 
-    dbcRow(
-        list(
-        ### 1st column
-        dbcCol(
-            list(
-            dbcRow(
-                list(
+#' Generate tab 2 layout
+#'
+#' @return dbcContainer Container with the html content of the page
+generate_tab_2_layout <- function(){
+    dbcContainer(list(
+        dbcRow(list(
+            # Column 1
+            dbcCol(list(
+                dbcRow(list(
                     htmlDiv(
                         list(
                             "Select Province or CMA",
@@ -41,47 +30,33 @@ return(dbcContainer(
                                 id='geo_radio_button',
                                 options=list(
                                     list('label' = 'Province', 'value' = 'PROVINCE'),
-                                    list('label' = 'CMA', 'value' = 'CMA'),
-                                ),
-                                value='PROVINCE', 
-                                labelStyle=list('margin-left' = '10px', 'margin-right' = '10px') # haven't changed syntax
-                            )
+                                    list('label' = 'CMA', 'value' = 'CMA')),
+                                value='PROVINCE')#, 
+                            #labelStyle=list('margin-left' = '10px', 'margin-right' = '10px')
                         ),
-                        style=list("width"= "100%"),
+                        style=list("width"= "100%")
                     )
-                ),
+                ))
             ),
-            dbcRow(
-                list(
-                    htmlDiv(
-                        list(
-                            "Select Locations to Display",
-                            dccDropdown(
-                                id = 'geo_multi_select',
-                                multi = TRUE,
-                                value = ''
-                            ),
-                        ),
-                        style=list("width" = "100%"),
-                    )
-                )
-            )
-        ),
-        style=list('padding-left' = '2%'),
-        width=3
-        ),
-        dbcCol(
-            list(
-            # GET SASHA TO HELP, BELOW IS PYTHON CODE
-            #html.Iframe(
-            #    id = 'crime_trends_plot',
-            #    style = {'border-width': '0', 'width': '100%', 'height': '800px'}
-            )
-        ), 
-        style=list('padding-left' = '2%'),
-        )
-    )
-),
-fluid=True) # SASHA - STILL NEEDED? 
-)
+            dbcRow(list(
+                htmlDiv(list(
+                    "Select Locations to Display",
+                    dccDropdown(id = 'geo_multi_select',multi = TRUE)
+                ),
+                style=list("width" = "100%"),
+                ))),
+            style=list('padding-left' = '2%'),
+            width=3),
+            
+            # Column 2
+            dbcCol(list(
+                htmlDiv("Crime Trends"),
+                dccGraph(id="crime_trends_plot", 
+                         style = list('width'= '100%', 'height'= '800px'))
+            ),
+            style=list('padding-left' = '2%'))
+        ))
+    ),
+    fluid=TRUE
+    ) 
 }
