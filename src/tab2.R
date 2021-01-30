@@ -42,7 +42,7 @@ generate_tab_2_layout <- function(){
                         "Select Locations to Display",
                         dccDropdown(id = 'geo_multi_select', 
                                     placeholder = "Please choose locations to display", 
-                                    value = c("Nova Scotia"),
+                                    value = c("British Columbia", "Alberta", "Ontario"),
                                     multi = TRUE)
                         ),
                         style=list("width" = "100%")
