@@ -13,7 +13,6 @@ library(tidyverse)
 library(ggplot2)
 library(cowplot)
 
-
 #' Generate tab 2 layout
 #'
 #' @return dbcContainer Container with the html content of the page
@@ -31,22 +30,25 @@ generate_tab_2_layout <- function(){
                                 options=list(
                                     list('label' = 'Province', 'value' = 'PROVINCE'),
                                     list('label' = 'CMA', 'value' = 'CMA')),
-                                value='PROVINCE')#, 
-                            #labelStyle=list('margin-left' = '10px', 'margin-right' = '10px')
+                                value='PROVINCE', 
+                                labelStyle = list('margin-left' = '10px', 'margin-right' = '10px')
+                                )
                         ),
                         style=list("width"= "100%")
                     )
-                ))
-            ),
-            dbcRow(list(
-                htmlDiv(list(
-                    "Select Locations to Display",
-                    dccDropdown(id = 'geo_multi_select',multi = TRUE)
-                ),
-                style=list("width" = "100%"),
-                ))),
-            style=list('padding-left' = '2%'),
-            width=3),
+                )),
+                dbcRow(list(
+                    htmlDiv(list(
+                        "Select Locations to Display",
+                        dccDropdown(id = 'geo_multi_select', 
+                                    placeholder = "Please choose locations to display", 
+                                    multi = TRUE)
+                        ),
+                        style=list("width" = "100%")
+                        ))
+                    )),
+                style=list('padding-left' = '2%'),
+                width=3),
             
             # Column 2
             dbcCol(list(

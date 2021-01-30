@@ -145,5 +145,15 @@ app$callback(
     get_dropdown_options(DATA$Violation.Description)
   }
 )
+app$callback(
+    output('geo_multi_select', 'options'),
+    list(input('geo_radio_button', 'value'),
+         input('crime-dashboard-content', 'children')),
+    function(geo_level, ...){
+        df <- DATA %>%
+            filter(Geo_Level == geo_level)
+        get_dropdown_options(df$Geography)
+    })
+
 
 app$run_server(debug=FALSE)
