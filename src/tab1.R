@@ -10,7 +10,7 @@ library(devtools)
 library(dashCoreComponents)
 library(dashBootstrapComponents)
 
-generate_layout <- function(){
+generate_tab_1_layout <- function(){
 #   """Generate tab 1 layout
 
 #   Returns
@@ -62,7 +62,7 @@ generate_layout <- function(){
                             htmlDiv("Violation Subcategory by Province"),
                             htmlDiv(
                                 list(
-                                    #dccGraph(id="choropleth")
+                                    dccGraph(id="choropleth")
                                     #htmlImg( src="https://i.pinimg.com/originals/27/8e/ef/278eefb576915d43e85b7a467d8f709a.jpg",
                                     #          width="100%",
                                     )
@@ -88,8 +88,6 @@ generate_layout <- function(){
             
             )
             )
-        ))
-        
-    #fluid=True SAHSA - IS THIS NEEDED FOR R?
-
+        ),
+        fluid = TRUE)
 }
