@@ -23,7 +23,8 @@ import_data <- function() {
   df %>%
     drop_na(Value) %>%
     mutate(Geography = str_replace(Geography, " \\[[\\d|\\/]*\\]", "")) %>%
-    mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) 
+    mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) %>%
+    mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
 }
 
 # Import geo data for choropleth
@@ -50,7 +51,7 @@ app$title("Canadian Crime Dashboard")
 # Page Structure
 app$layout(
   htmlDiv(list(
-    dbcTabs(
+    dbcTabs(   # isn't it dccTabs ? Dashr documentation core components (CAL)
       id = 'crime-dashboard-tabs',
       children = list(
         dbcTab(label='Geographic Crime Comparisons', tab_id='tab-1'),
@@ -138,9 +139,9 @@ app$callback(
       filter(Violation.Description == violation) %>%
       filter(Geo_Level == "CMA") %>%
       filter(Year == year)
-    
+
     plot <- df %>%
-      ggplot(aes(x = Value, y = reorder(Geography, -Value))) +
+      ggplot(aes(x = Value, y = reorder(Geography, Value))) +
       geom_bar(width = 0.5, stat = "identity") + # size may need changing
       labs(x = metric, y = 'Census Metropolitan Area (CMA)') +
       ggtitle(paste(year, violation))
@@ -185,7 +186,7 @@ app$callback(
 )
 
 app$callback(
-    output('crime_trends_plot', 'fig'),
+    output('crime_trends_plot', 'figure'),
     list(
         input('geo_multi_select', 'value'),
         input('geo_radio_button', 'value')
@@ -195,29 +196,30 @@ app$callback(
         metric <- "Rate per 100,000 population"
         metric_name <- "Violations per 100k"
         
-        cat_list <- list('Total violent Criminal Code violations', 
-                         'Total property crime violations',
-                         'Total drug violations',
-                         'Total other Criminal Code violations')
-        
-        cat_labs <- list('Violent Crimes', 'Property Crimes', 
-                     'Drug Crimes', 'Other Criminal Code Violations')
+        categories <- c(
+          'Violent Crimes' = 'Total violent Criminal Code violations', 
+          'Property Crimes' = 'Total property crime violations',
+          'Drug Crimes' =  'Total drug violations',
+          'Other Criminal Code Violations' = 'Total other Criminal Code violations')
         
         df <- DATA %>%
             filter(Metric == metric) %>%
             filter(Geo_Level == geo_level) %>%  
             filter(Geography %in% geo_list) %>%
-            filter(Violation.Description %in% cat_list)
+            filter(Violation.Description %in% categories)
         
         plot <- df %>%
-                ggplot(aes(x = Year, y = Value, color = Geography)) +
-                geom_line() +
-                ggtitle('Violent Crimes') +
-                ylab(cat_labs) +
-                facet_wrap(~Violation.Description, ncol=2)
+          ggplot(aes(x = Year, y = Value, color = Geography)) +
+          geom_line() +
+          labs(y = metric) +
+          facet_wrap(~Violation.Description, 
+                     ncol=2, 
+                     scales = "free"
+                     )
         
         ggplotly(plot)
     }
 )
 
+#app$run_server(debug=FALSE) (CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
 app$run_server(host = '0.0.0.0', debug=FALSE)
