@@ -23,7 +23,7 @@ import_data <- function() {
   ### Data Wrangling 
   df %>%
     drop_na(Value) %>%
-    mutate(Geography = str_replace(Geography, " \\[[\\d]*\\]", "")) %>%
+    mutate(Geography = str_replace(Geography, " \\[[\\d|\\/]*\\]", "")) %>%
     mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) 
 }
 
@@ -81,22 +81,24 @@ app$callback(
   output('cma_barplot', 'figure'),
   list(
     input('metric_select', 'value'), 
-    input('violation_select', 'value')
+    input('violation_select', 'value'),
+    input('year_select', 'value')
   ),
-  function(metric, violation) {
+  function(metric, violation, year) {
 
     df <- DATA %>%
       filter(Metric == metric) %>%
       filter(Violation.Description == violation) %>%
-      filter(Geo_Level == "CMA")
+      filter(Geo_Level == "CMA") %>%
+      filter(Year == year)
     
     plot <- df %>%
-      ggplot(aes(x = Value, y = Geography, tooltip = Value)) +
+      ggplot(aes(x = Value, y = reorder(Geography, -Value))) +
       geom_bar(width = 0.5, stat = "identity") + # size may need changing
       labs(x = metric, y = 'Census Metropolitan Area (CMA)') +
-      ggtitle(violation)
+      ggtitle(paste(year, violation))
     
-    ggplotly(p = plot)
+    ggplotly(plot, tooltip="Value")
    }
 )
 

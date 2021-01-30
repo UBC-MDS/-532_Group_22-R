@@ -18,7 +18,10 @@ generate_tab_1_layout <- function(){
     #   dbc.Container
     #       Container with the html content of the page
     #   """    
-    dropdown_height <- 70    
+    dropdown_height <- 70   
+    start_year <- 1998
+    end_year <- 2019
+    year_range <- seq(start_year, end_year, 3)
     
     dbcContainer(list(
         dbcRow(list(
@@ -43,6 +46,22 @@ generate_tab_1_layout <- function(){
                         dccDropdown(id="subviolation_select", value = "", optionHeight = dropdown_height)
                         ), 
                         style = list("width" = "100%"))
+                )),
+                dbcRow(list(
+                    htmlDiv(list(
+                        "Select Year of Interest",
+                        dccSlider(
+                            id="year_select",
+                            min = start_year, 
+                            max = end_year,
+                            step = 1,
+                            value = 2019, 
+                            dots = TRUE,
+                            tooltip = list("placement" = "top"),
+                            marks = as.list(setNames(year_range, as.character(year_range)))
+                            )
+                    ), 
+                    style = list("width" = "100%"))
                 ))
             ), 
             width=3, 
