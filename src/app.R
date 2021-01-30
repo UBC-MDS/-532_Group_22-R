@@ -31,8 +31,8 @@ import_map_data <- function(){
 }
 
 # Global vars
-PROVINCES <- import_map_data()
-DATA <- import_data()
+PROVINCES <<- import_map_data()
+DATA <<- import_data()
 
 app <- Dash$new(suppress_callback_exceptions = TRUE,
                 external_stylesheets = dbcThemes$BOOTSTRAP)
@@ -162,7 +162,43 @@ app$callback(
         df <- DATA %>%
             filter(Geo_Level == geo_level)
         get_dropdown_options(df$Geography)
-    })
+    }
+)
 
+app$callback(
+    output('crime_trends_plot', 'fig'),
+    list(
+        input('geo_multi_select', 'value'),
+        input('geo_radio_button', 'value')
+    ),
+    function(geo_list, geo_level) {
+
+        metric <- "Rate per 100,000 population"
+        metric_name <- "Violations per 100k"
+        
+        cat_list <- list('Total violent Criminal Code violations', 
+                         'Total property crime violations',
+                         'Total drug violations',
+                         'Total other Criminal Code violations')
+        
+        cat_labs <- list('Violent Crimes', 'Property Crimes', 
+                     'Drug Crimes', 'Other Criminal Code Violations')
+        
+        df <- DATA %>%
+            filter(Metric == metric) %>%
+            filter(Geo_Level == geo_level) %>%  
+            filter(Geography %in% geo_list) %>%
+            filter(Violation.Description %in% cat_list)
+        
+        plot <- df %>%
+                ggplot(aes(x = Year, y = Value, color = Geography)) +
+                geom_line() +
+                ggtitle('Violent Crimes') +
+                ylab(cat_labs) +
+                facet_wrap(~Violation.Description, ncol=2)
+        
+        ggplotly(plot)
+    }
+)
 
 app$run_server(debug=FALSE)
