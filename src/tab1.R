@@ -26,23 +26,26 @@ generate_tab_1_layout <- function(){
                 dbcRow(list(
                     htmlDiv(list(
                         "Select Metric",
-                        dccDropdown(id = "metric_select", optionHeight=dropdown_height)
-                    ))
+                        dccDropdown(id = "metric_select", value = "Rate per 100,000 population", optionHeight=dropdown_height)
+                        ),
+                        style = list("width" = "100%"))
                 )),
                 dbcRow(list(
                     htmlDiv(list(
                         "Select Violation",
-                        dccDropdown(id = "violation_select", optionHeight = dropdown_height)
-                        ))
+                        dccDropdown(id = "violation_select", value = "Total, all violations", optionHeight = dropdown_height)
+                        ),
+                        style = list("width" = "100%"))
                 )),
                 dbcRow(list(
                     htmlDiv(list(
                         "Select Violation Subcategory",
-                        dccDropdown(id="subviolation_select", optionHeight = dropdown_height)
-                    ))
+                        dccDropdown(id="subviolation_select", value = "", optionHeight = dropdown_height)
+                        ), 
+                        style = list("width" = "100%"))
                 ))
             ), 
-            #width="auto", 
+            width=3, 
             style=list('padding-left'= '2%', "width" = "100%")
             ), 
             
@@ -53,7 +56,7 @@ generate_tab_1_layout <- function(){
                     dccGraph(id="choropleth")
                     ))
                 ),
-                #width="auto", 
+                width=5, 
                 style=list('padding-left' = '2%')
             ),
             
@@ -64,7 +67,7 @@ generate_tab_1_layout <- function(){
                     dccGraph(id='cma_barplot', style = list('width'= '100%', 'height'= '600px'))
                 ))
             ),
-            #width="auto", 
+            width=4, 
             style=list('padding-left' = '2%', 'padding-right' = '2%')
             )
             ))
