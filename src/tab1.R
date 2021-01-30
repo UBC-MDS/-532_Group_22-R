@@ -6,7 +6,6 @@
 
 library(dash)
 library(dashHtmlComponents)
-library(devtools)
 library(dashCoreComponents)
 library(dashBootstrapComponents)
 
