@@ -23,7 +23,8 @@ import_data <- function() {
   df %>%
     drop_na(Value) %>%
     mutate(Geography = str_replace(Geography, " \\[[\\d|\\/]*\\]", "")) %>%
-    mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) 
+    mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) %>%
+    mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
 }
 
 # Import geo data for choropleth
@@ -50,7 +51,7 @@ app$title("Canadian Crime Dashboard")
 # Page Structure
 app$layout(
   htmlDiv(list(
-    dbcTabs(
+    dbcTabs(   # isn't it dccTabs ? Dashr documentation core components (CAL)
       id = 'crime-dashboard-tabs',
       children = list(
         dbcTab(label='Geographic Crime Comparisons', tab_id='tab-1'),
@@ -138,9 +139,9 @@ app$callback(
       filter(Violation.Description == violation) %>%
       filter(Geo_Level == "CMA") %>%
       filter(Year == year)
-    
+
     plot <- df %>%
-      ggplot(aes(x = Value, y = reorder(Geography, -Value))) +
+      ggplot(aes(x = Value, y = reorder(Geography, Value))) +
       geom_bar(width = 0.5, stat = "identity") + # size may need changing
       labs(x = metric, y = 'Census Metropolitan Area (CMA)') +
       ggtitle(paste(year, violation))
@@ -220,4 +221,5 @@ app$callback(
     }
 )
 
+#app$run_server(debug=FALSE) (CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
 app$run_server(host = '0.0.0.0', debug=FALSE)
