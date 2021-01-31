@@ -36,9 +36,15 @@ The founders of this app are (Cal Schafer, Ifeanyi Anene, Sasha Babicki, Steffen
 
 The development of this app is overseen by our wonderful DSCI 532: Data Visualizations II Instructor and the respective teaching assistants TAs (Analise, Andy, Chris, Afshin). A pictorial visualization of our proposed dashboard can be seen below. 
 
-![Tab 1](doc/design_mockup_tab_1.png "Tab 1 - Geographic Crime Comparisons")
+![Tab 1](doc/images/design_mockup_tab_1.png "Tab 1 - Geographic Crime Comparisons")
 
-![Tab 2](doc/design_mockup_tab_2.png "Tab 2 - Crime Time Trends")
+![Tab 2](doc/images/design_mockup_tab_2.png "Tab 2 - Crime Time Trends")
+
+Screenshots of the R version of our app can be seen below.
+
+![Tab 1](doc/images/tab1_example.png "Tab 1 - Geographic Crime Comparisons")
+
+![Tab 2](doc/images/tab2_example.png "Tab 2 - Crime Time Trends")
 
 
 #### Installation
