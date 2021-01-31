@@ -14,11 +14,11 @@ Hi everyone, thanks for visiting the Criminality in Canada: Fighting Anecdotes w
 The document you are currently reading (README) is here to provide an overview and give some information regarding our project. Click the links below to take you to a section in which you're interested, or just scroll down to find out more. 
 
 
-* [`What are we doing? (And why?)`](#What-are-we-doing-And-why?)
-* [`Who are we?`](#Who-are-we?)
-* [`Installation`](#Installation)
+* [`What are we doing? (And why?)`](#what-are-we-doing-and-why?)
+* [`Who are we?`](#who-are-we)
+* [`Installation`](#installation)
+* [`Dependencies`](#dependencies)
 * [`Team Members`](#team-members)
-* [`Teamwork Contract`](#teamwork-contract)
 * [`License`](#license)
 
 ### What we are doing? (And why?)
@@ -36,19 +36,26 @@ The founders of this app are (Cal Schafer, Ifeanyi Anene, Sasha Babicki, Steffen
 
 The development of this app is overseen by our wonderful DSCI 532: Data Visualizations II Instructor and the respective teaching assistants TAs (Analise, Andy, Chris, Afshin). A pictorial visualization of our proposed dashboard can be seen below. 
 
-
-
 ![Tab 1](doc/design_mockup_tab_1.png "Tab 1 - Geographic Crime Comparisons")
 
 ![Tab 2](doc/design_mockup_tab_2.png "Tab 2 - Crime Time Trends")
 
+
 #### Installation
 
-From the root folder run the following commands to activate the environment:
+Make sure all dependencies are installed, then from the root folder run the following command to run the app locally:
 
-`conda env update -f group22env.yaml`
+`RScript src/app.R`
 
-`conda activate group22env`
+
+#### Dependencies
+
+Run the following commands in R to install the required libraries locally:
+
+`install.packages(c('dash', 'tidyverse', 'ggplot2', 'cowplot', 'here', 'ggthemes', 'remotes', 'spdplyr', 'plotly', 'rjson', 'devtools'))`
+
+`devtools::install_github('facultyai/dash-bootstrap-components@r-release')`
+
 
 #### Team Members
 - Cal Schafer
