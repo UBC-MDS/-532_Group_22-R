@@ -23,9 +23,14 @@ import_data <- function() {
   df %>%
     drop_na(Value) %>%
     mutate(Geography = str_replace(Geography, " \\[[\\d|\\/]*\\]", "")) %>%
+<<<<<<< HEAD
     mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) %>%
     mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", 
                               str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
+=======
+    mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", ""))# %>%
+    # mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
+>>>>>>> upstream/main
 }
 
 
@@ -90,37 +95,29 @@ app$callback(
     
     df <- DATA %>% 
       filter(Geo_Level == "PROVINCE") %>% 
-      # filter(Metric == metric) %>%
-      # filter(Violation.Description == violation) %>%
-      # filter(Year == year) %>% 
-      filter(Year == 2010) %>%
-      filter(Violation.Description == 'Total, all violations') %>%
-      filter(Metric == 'Rate per 100,000 population')
-    
-    # province_data <- left_join(PROVINCES, df, by=c("NAME"="Geography"))
-    
-    # num_colours <- 13
-    # bins <- round(seq(from=0, to=max(df$Value), length.out = num_colours), 0)
-    
-    # A few pallette options
-    #pallete <- "inferno"
-    # pallete <- "RdYlBu"
-    #pallete <- topo.colors(num_colours)
-    #pallete <- colorRampPalette(c("#FF0000", "#000000", "#33FF00"))(num_colours)
-    
-    # pal <- colorBin(pallete, domain = province_data$Value, bins = bins, reverse = TRUE)
-    
+      filter(Metric == metric) %>%
+      filter(Violation.Description == violation) %>%
+      filter(Year == year)
+
     fig <- plot_ly()
     fig <- fig %>% add_trace(
       type = "choropleth",
       geojson = PROVINCES,
       locations = df$Geography,
       z = df$Value,
-      colorscale = "Viridis",
+      colorscale = 'Viridis',
       zmin = min(df$Value),
       zmax = max(df$Value),
       marker = list(line = list(width = 0))
     )
+    fig <- fig %>% layout(
+      geo = g <- list(
+        fitbounds = "locations",
+        visible = FALSE,
+        projection = list(type = "transverse mercator")
+      ))
+    fig <- fig %>% colorbar(title = metric)
+    fig <- fig %>% layout(title = paste(violation, '(',year,')'))
     fig
     
   }
@@ -224,5 +221,5 @@ app$callback(
     }
 )
 
-app$run_server(debug=FALSE) #(CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
-#app$run_server(host = '0.0.0.0', debug=FALSE)
+# app$run_server(debug=FALSE) #(CAL: I HAD TO COMMENT OUT THE LINE BELOW FOR THIS TO WORK ON MY MACHINE)
+app$run_server(host = '0.0.0.0', debug=FALSE)
