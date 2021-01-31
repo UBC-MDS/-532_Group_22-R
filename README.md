@@ -38,9 +38,9 @@ The development of this app is overseen by our wonderful DSCI 532: Data Visualiz
 
 
 
-![Tab 1](doc/images/design_mockup_tab_1.png "Tab 1 - Geographic Crime Comparisons")
+![Tab 1](doc/design_mockup_tab_1.png "Tab 1 - Geographic Crime Comparisons")
 
-![Tab 2](doc/images/design_mockup_tab_2.png "Tab 2 - Crime Time Trends")
+![Tab 2](doc/design_mockup_tab_2.png "Tab 2 - Crime Time Trends")
 
 #### Installation
 
