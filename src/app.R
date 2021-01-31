@@ -27,6 +27,7 @@ import_data <- function() {
     # mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
 }
 
+
 # Import geo data for choropleth
 import_map_data <- function(){
   # readRDS("data/processed/canadian_provinces.rds")
@@ -189,10 +190,11 @@ app$callback(
         metric_name <- "Violations per 100k"
         
         categories <- c(
-          'Violent Crimes' = 'Total violent Criminal Code violations', 
+          'Other Criminal Code Violations' = 'Total other Criminal Code violations',
           'Property Crimes' = 'Total property crime violations',
-          'Drug Crimes' =  'Total drug violations',
-          'Other Criminal Code Violations' = 'Total other Criminal Code violations')
+          'Violent Crimes' = 'Total violent Criminal Code violations', 
+          'Drug Crimes' =  'Total drug violations'
+          )
         
         df <- DATA %>%
             filter(Metric == metric) %>%
