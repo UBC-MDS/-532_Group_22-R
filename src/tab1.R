@@ -63,7 +63,7 @@ generate_tab_1_layout <- function(){
                     style = list("width" = "100%"))
                 ))
             ), 
-            width=2, 
+            width=3, 
             style=list('padding-left'= '2%', "width" = "100%")
             ), 
             
