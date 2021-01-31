@@ -24,7 +24,8 @@ import_data <- function() {
     drop_na(Value) %>%
     mutate(Geography = str_replace(Geography, " \\[[\\d|\\/]*\\]", "")) %>%
     mutate(Violation.Description = str_replace(Violation.Description, " \\[[\\d]*\\]", "")) %>%
-    mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
+    mutate(Geo_Level = ifelse(Geography == "Prince Edward Island", 
+                              str_replace(Geo_Level, "CMA", "PROVINCE"), Geo_Level)) 
 }
 
 
